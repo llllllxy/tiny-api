@@ -14,7 +14,7 @@ public interface SQLCompiler {
      * @return List 替换值后的上下文字符
      * @throws CompileException contexts的长度与values的长度不一致
      */
-    List<String> compile(List<String> contexts, List<Object> values) throws CompileException;
+    List<Object> compile(List<String> contexts, List<Object> values) throws CompileException;
 
     /**
      * 设置参数转换者

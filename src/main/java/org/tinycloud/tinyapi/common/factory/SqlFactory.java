@@ -12,11 +12,10 @@ import java.util.Map;
 
 public class SqlFactory {
 
-    public static String generateSql(String sqlStr, Map paramMap) {
+    public static String generateSql(String sqlStr, Map<String, Object> paramMap) {
         if (sqlStr == null) {
             throw new RuntimeException("sql模板为空");
         }
-
         SqlTemplateEngin sqlTemplateEngin = new SqlTemplateEngin();
         SqlTemplate sqlTemplate = sqlTemplateEngin.getSqlTemplate(sqlStr);
 
@@ -34,7 +33,7 @@ public class SqlFactory {
                 "<foreach item=\"item\" index=\"index\" collection=\"idList\" open = \"(\" separator = \",\" close = \")\">\n" +
                 "            #{item}\n" +
                 "        </foreach>";
-        Map paramMap = new HashMap();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("_parameter", "1");
         paramMap.put("lineNo", 222);
 

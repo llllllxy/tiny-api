@@ -33,13 +33,14 @@ public class SQLAnalyze {
             start = matcher.end();
         }
         restLists.add(sql.substring(start));
-        contextLists = compiler.compile(contextLists, params);
+
+       List<Object> compileLists = compiler.compile(contextLists, params);
 
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < restLists.size(); i++) {
             result.append(restLists.get(i));
             if (i != restLists.size() - 1) {
-                result.append(contextLists.get(i));
+                result.append(compileLists.get(i));
             }
         }
         return result.toString();
