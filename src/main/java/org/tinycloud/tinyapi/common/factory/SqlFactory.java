@@ -27,17 +27,17 @@ public class SqlFactory {
 
     public static void main(String[] args) {
 
-        String sql = "select datasource_id, db_type, db_driver, db_url, db_user, db_pwd\n" +
-                "        from sys_datasync_datasource\n" +
-                "        where datasource_id = #{_parameter} and line_no = #{lineNo} and hhh in " +
-                "<foreach item=\"item\" index=\"index\" collection=\"idList\" open = \"(\" separator = \",\" close = \")\">\n" +
-                "            #{item}\n" +
-                "        </foreach>";
+        String sql = """
+                select datasource_id, db_type, db_driver, db_url, db_user, db_pwd
+                        from sys_datasync_datasource
+                        where datasource_id = #{_parameter} and line_no = #{lineNo} and hhh in
+                <foreach item="item" index="index" collection="idList" open = "(" separator = "," close = ")">#{item}</foreach>
+                """;
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("_parameter", "1");
         paramMap.put("lineNo", 222);
 
-        paramMap.put("idList", List.of(1,2,3));
+        paramMap.put("idList", List.of(1, 2, 3));
 
         String result = SqlFactory.generateSql(sql, paramMap);
 
