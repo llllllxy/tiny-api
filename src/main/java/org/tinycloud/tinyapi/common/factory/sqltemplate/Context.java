@@ -11,7 +11,6 @@ import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
 public class Context {
-	
 
 	static {
 		OgnlRuntime.setPropertyAccessor(HashMap.class, new ContextAccessor());
@@ -93,25 +92,20 @@ public class Context {
 		}
 
 		@Override
-		public void setProperty(Map context, Object target, Object name,
-				Object value) throws OgnlException {
+		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			Map map = (Map) target;
 			map.put(name, value);
 		}
 
 		@Override
-		public String getSourceAccessor(OgnlContext arg0, Object arg1,
-				Object arg2) {
-			// TODO Auto-generated method stub
+		public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
 			return null;
 		}
 
 		@Override
 		public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
-			// TODO Auto-generated method stub
 			return null;
 		}
-
 	}
 
 }

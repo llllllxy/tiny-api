@@ -3,8 +3,7 @@ package org.tinycloud.tinyapi.common.factory.sqltemplate;
 import java.util.List;
 
 public class SqlMeta {
-	
-	
+
 	private String sql  ;
 	
 	private List<Object> parameter ;
@@ -35,7 +34,5 @@ public class SqlMeta {
 	public String toString() {
 		return "SqlInfo [sql=" + sql + ", parameter=" + parameter + "]";
 	}
-	
-	
 
 }

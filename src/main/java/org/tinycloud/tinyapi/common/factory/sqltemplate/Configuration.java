@@ -16,121 +16,109 @@ import java.util.concurrent.FutureTask;
 
 public class Configuration {
 
-	private ConcurrentHashMap<String, FutureTask<SqlTemplate>> templateCache;
+    private final ConcurrentHashMap<String, FutureTask<SqlTemplate>> templateCache;
 
-	private transient boolean cacheTemplate;
+    private transient boolean cacheTemplate;
 
-	private Charset charset;
+    private Charset charset;
 
-	public Configuration() {
-		this(true, Charset.defaultCharset());
-	}
+    public Configuration() {
+        this(true, Charset.defaultCharset());
+    }
 
-	public Configuration(boolean cacheTemplate, Charset charset) {
-		super();
+    public Configuration(boolean cacheTemplate, Charset charset) {
+        super();
+        this.cacheTemplate = cacheTemplate;
+        this.charset = charset;
+        templateCache = new ConcurrentHashMap<String, FutureTask<SqlTemplate>>();
+    }
 
-		this.cacheTemplate = cacheTemplate;
-		this.charset = charset;
+    public SqlTemplate getTemplate(final String content) {
+        if (cacheTemplate) {
+            FutureTask<SqlTemplate> f = templateCache.get(content);
+            if (f == null) {
+                FutureTask<SqlTemplate> ft = new FutureTask<SqlTemplate>(
+                        new Callable<SqlTemplate>() {
+                            @Override
+                            public SqlTemplate call() throws Exception {
+                                return createTemplate(content);
+                            }
+                        });
+                f = templateCache.putIfAbsent(content, ft);
+                if (f == null) {
+                    ft.run();
+                    f = ft;
+                }
+            }
+            try {
+                return f.get();
+            } catch (Exception e) {
+                templateCache.remove(content);
+                throw new RuntimeException(e);
+            }
+        }
+        return createTemplate(content);
+    }
 
-		templateCache = new ConcurrentHashMap<String, FutureTask<SqlTemplate>>();
-	}
+    private SqlTemplate createTemplate(String content) {
+        SqlTemplate template = new SqlTemplate.SqlTemplateBuilder(this, content)
+                .build();
+        return template;
+    }
 
-	public SqlTemplate getTemplate(final String content) {
+    public SqlTemplate getTemplate(InputStream in) throws IOException {
 
-		if (cacheTemplate) {
+        String content;
+        try {
+            content = readerContent(in);
+        } catch (IOException e) {
+            throw new IOException("Error reading template ", e);
+        }
 
-			FutureTask<SqlTemplate> f = templateCache.get(content);
+        return getTemplate(content);
 
-			if (f == null) {
-				FutureTask<SqlTemplate> ft = new FutureTask<SqlTemplate>(
-						new Callable<SqlTemplate>() {
+    }
 
-							@Override
-							public SqlTemplate call() throws Exception {
-								return createTemplate(content);
-							}
-						});
+    public SqlTemplate getTemplate(File tplFile) throws FileNotFoundException,
+            IOException {
 
-				f = templateCache.putIfAbsent(content, ft);
+        return this.getTemplate(new FileInputStream(tplFile));
+    }
 
-				if (f == null) {
-					ft.run();
-					f = ft;
-				}
-			}
+    private String readerContent(InputStream in) throws IOException {
 
-			try {
-				return f.get();
-			} catch (Exception e) {
-				templateCache.remove(content);
-				throw new RuntimeException(e);
-			}
+        StringBuilder sb = new StringBuilder(in.available());
 
-		}
+        InputStreamReader inputStreamReader = new InputStreamReader(
+                new BufferedInputStream(in), charset);
 
-		return createTemplate(content);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-	}
+        String line;
 
-	private SqlTemplate createTemplate(String content) {
-		SqlTemplate template = new SqlTemplate.SqlTemplateBuilder(this, content)
-				.build();
-		return template;
-	}
+        while ((line = bufferedReader.readLine()) != null) {
+            sb.append(line);
+        }
 
-	public SqlTemplate getTemplate(InputStream in) throws IOException {
+        bufferedReader.close();
 
-		String content;
-		try {
-			content = readerContent(in);
-		} catch (IOException e) {
-			throw new IOException("Error reading template ", e);
-		}
+        return sb.toString();
+    }
 
-		return getTemplate(content);
+    public boolean isCacheTemplate() {
+        return cacheTemplate;
+    }
 
-	}
+    public void setCacheTemplate(boolean cacheTemplate) {
+        this.cacheTemplate = cacheTemplate;
+    }
 
-	public SqlTemplate getTemplate(File tplFile) throws FileNotFoundException,
-			IOException {
+    public Charset getCharset() {
+        return charset;
+    }
 
-		return this.getTemplate(new FileInputStream(tplFile));
-	}
-
-	private String readerContent(InputStream in) throws IOException {
-
-		StringBuilder sb = new StringBuilder(in.available());
-
-		InputStreamReader inputStreamReader = new InputStreamReader(
-				new BufferedInputStream(in), charset);
-
-		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-		String line;
-
-		while ((line = bufferedReader.readLine()) != null) {
-			sb.append(line);
-		}
-
-		bufferedReader.close();
-
-		return sb.toString();
-	}
-
-	public boolean isCacheTemplate() {
-		return cacheTemplate;
-	}
-
-	public void setCacheTemplate(boolean cacheTemplate) {
-		this.cacheTemplate = cacheTemplate;
-	}
-
-	public Charset getCharset() {
-		return charset;
-	}
-
-	public void setCharset(Charset charset) {
-		this.charset = charset;
-	}
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
 
 }
