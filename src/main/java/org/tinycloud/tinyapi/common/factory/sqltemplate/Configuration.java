@@ -15,7 +15,6 @@ import java.util.concurrent.FutureTask;
 
 
 public class Configuration {
-
     private final ConcurrentHashMap<String, FutureTask<SqlTemplate>> templateCache;
 
     private transient boolean cacheTemplate;
@@ -61,47 +60,40 @@ public class Configuration {
     }
 
     private SqlTemplate createTemplate(String content) {
-        SqlTemplate template = new SqlTemplate.SqlTemplateBuilder(this, content)
-                .build();
+        SqlTemplate template = new SqlTemplate.SqlTemplateBuilder(this, content).build();
         return template;
     }
 
     public SqlTemplate getTemplate(InputStream in) throws IOException {
-
         String content;
         try {
             content = readerContent(in);
         } catch (IOException e) {
             throw new IOException("Error reading template ", e);
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ignored) {
+            }
         }
-
         return getTemplate(content);
-
     }
 
-    public SqlTemplate getTemplate(File tplFile) throws FileNotFoundException,
-            IOException {
-
+    public SqlTemplate getTemplate(File tplFile) throws FileNotFoundException, IOException {
         return this.getTemplate(new FileInputStream(tplFile));
     }
 
     private String readerContent(InputStream in) throws IOException {
-
         StringBuilder sb = new StringBuilder(in.available());
-
-        InputStreamReader inputStreamReader = new InputStreamReader(
-                new BufferedInputStream(in), charset);
-
+        InputStreamReader inputStreamReader = new InputStreamReader(new BufferedInputStream(in), charset);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
         String line;
-
         while ((line = bufferedReader.readLine()) != null) {
             sb.append(line);
         }
-
         bufferedReader.close();
-
         return sb.toString();
     }
 
