@@ -15,6 +15,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.tinycloud.tinyapi.common.factory.BuiltInVariable;
 import org.springframework.core.io.Resource;
+import org.tinycloud.tinyapi.common.factory.sqltemplate.exception.SqlTemplateException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -82,7 +83,7 @@ public class SqlTemplate {
                                 context.getBinding());
 
                         if (value == null) {
-                            throw new RuntimeException("Can not found "
+                            throw new SqlTemplateException("Can not found "
                                     + content + " value");
                         }
 
@@ -118,19 +119,15 @@ public class SqlTemplate {
         }
 
         public SqlTemplate build() {
-
             Document document = null;
             try {
                 document = buildXml(templateContent);
             } catch (Exception e) {
                 //System.out.println(e);
-                throw new RuntimeException(e);
+                throw new SqlTemplateException(e);
             }
-
             List<SqlFragment> contents = buildDynamicTag(document.getElementsByTagName("script").item(0));
-
             return new SqlTemplate(new MixedSqlFragment(contents), cfg);
-
         }
 
         private List<SqlFragment> buildDynamicTag(Node node) {
@@ -222,8 +219,7 @@ public class SqlTemplate {
             public void handleNode(Node nodeToHandle,
                                    List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
 
                 NamedNodeMap attributes = nodeToHandle.getAttributes();
                 Node prefixAtt = attributes
@@ -286,7 +282,7 @@ public class SqlTemplate {
                 Node collectionAtt = attributes.getNamedItem("collection");
 
                 if (collectionAtt == null) {
-                    throw new RuntimeException(nodeToHandle.getNodeName() + " must has a collection attribute !");
+                    throw new SqlTemplateException(nodeToHandle.getNodeName() + " must has a collection attribute !");
                 }
 
                 String collection = collectionAtt.getTextContent();
@@ -331,7 +327,7 @@ public class SqlTemplate {
                 Node testAtt = attributes.getNamedItem("test");
 
                 if (testAtt == null) {
-                    throw new RuntimeException(nodeToHandle.getNodeName() + " must has test attribute ! ");
+                    throw new SqlTemplateException(nodeToHandle.getNodeName() + " must has test attribute ! ");
                 }
 
                 String test = testAtt.getTextContent();
@@ -390,7 +386,7 @@ public class SqlTemplate {
                 if (defaultSqlFragments.size() == 1) {
                     defaultSqlFragment = defaultSqlFragments.get(0);
                 } else if (defaultSqlFragments.size() > 1) {
-                    throw new RuntimeException(
+                    throw new SqlTemplateException(
                             "Too many default (otherwise) elements in choose statement.");
                 }
                 return defaultSqlFragment;

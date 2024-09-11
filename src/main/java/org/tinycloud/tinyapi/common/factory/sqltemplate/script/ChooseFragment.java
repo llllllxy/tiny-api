@@ -9,8 +9,7 @@ public class ChooseFragment implements SqlFragment {
 	private SqlFragment defaultSqlFragment;
 	private List<SqlFragment> ifSqlFragments;
 
-	public ChooseFragment(List<SqlFragment> ifSqlFragments,
-			SqlFragment defaultSqlFragment) {
+	public ChooseFragment(List<SqlFragment> ifSqlFragments, SqlFragment defaultSqlFragment) {
 		this.ifSqlFragments = ifSqlFragments;
 		this.defaultSqlFragment = defaultSqlFragment;
 	}

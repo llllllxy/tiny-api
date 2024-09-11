@@ -4,6 +4,7 @@ import org.tinycloud.tinyapi.common.factory.sqlformat.AnalyzeContext;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlMeta;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlTemplate;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlTemplateEngin;
+import org.tinycloud.tinyapi.common.factory.sqltemplate.exception.SqlTemplateException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ public class SqlFactory {
 
     public static String generateSql(String sqlStr, Map<String, Object> paramMap) {
         if (sqlStr == null) {
-            throw new RuntimeException("sql模板为空");
+            throw new SqlTemplateException("sqlStr cannot be empty!");
         }
         SqlTemplateEngin sqlTemplateEngin = new SqlTemplateEngin();
         SqlTemplate sqlTemplate = sqlTemplateEngin.getSqlTemplate(sqlStr);
@@ -30,7 +31,7 @@ public class SqlFactory {
         String sql = """
                 select datasource_id, db_type, db_driver, db_url, db_user, db_pwd
                         from sys_datasync_datasource
-                        where datasource_id = #{_parameter} and line_no = #{lineNo} and hhh in
+                        where datasource_id = #{_parameter} and line_no = #{lineNo} and ddd = #{BUILTIN_USER_ID} and hhh in
                 <foreach item="item" index="index" collection="idList" open = "(" separator = "," close = ")">#{item}</foreach>
                 """;
         Map<String, Object> paramMap = new HashMap<>();

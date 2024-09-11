@@ -8,7 +8,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * <p>
+ *  定义默认参数
+ * </p>
+ *
+ * @author liuxingyu01
+ * @since 2024-09-11 10:42
+ */
 public class BuiltInVariable {
     private static final Logger logger = LoggerFactory.getLogger(BuiltInVariable.class);
 

@@ -14,7 +14,7 @@ public class DefaultSQLCompiler implements SQLCompiler {
             return Collections.emptyList();
         }
         if (contexts.size() != values.size()) {
-            throw new CompileException("contexts的长度与values的长度不一致");
+            throw new CompileException("contexts length and values length do not match, please check!");
         }
         List<Object> results = new ArrayList<>();
         for (int i = 0; i < contexts.size(); i++) {

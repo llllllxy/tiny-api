@@ -12,9 +12,16 @@ import ognl.OgnlParser;
 import ognl.ParseException;
 import ognl.TokenMgrError;
 
+/**
+ * <p>
+ *  Ognl缓存工具类
+ * </p>
+ *
+ * @author liuxingyu01
+ * @since 2024-09-11 10:42
+ */
 public class OgnlCache {
-
-	private static final Map<String, ognl.Node> expressionCache = new ConcurrentHashMap<String, ognl.Node>();
+	private static final Map<String, Node> expressionCache = new ConcurrentHashMap<>();
 
 	public static Object getValue(String expression, Object root) {
 		try {
@@ -25,21 +32,16 @@ public class OgnlCache {
 		}
 	}
 
-	private static Object parseExpression(String expression)
-			throws OgnlException {
+	private static Object parseExpression(String expression) throws OgnlException {
 		try {
 			Node node = expressionCache.get(expression);
 			if (node == null) {
-				node = new OgnlParser(new StringReader(expression))
-						.topLevelExpression();
+				node = new OgnlParser(new StringReader(expression)).topLevelExpression();
 				expressionCache.put(expression, node);
 			}
 			return node;
-		} catch (ParseException e) {
-			throw new ExpressionSyntaxException(expression, e);
-		} catch (TokenMgrError e) {
+		} catch (ParseException | TokenMgrError e) {
 			throw new ExpressionSyntaxException(expression, e);
 		}
-	}
-
+    }
 }

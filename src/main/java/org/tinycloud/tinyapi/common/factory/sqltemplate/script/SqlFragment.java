@@ -6,5 +6,4 @@ import org.tinycloud.tinyapi.common.factory.sqltemplate.Context;
 
 public interface SqlFragment {
 	boolean apply(Context context) ;
-
 }

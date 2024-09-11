@@ -34,5 +34,4 @@ public class SqlMeta {
 	public String toString() {
 		return "SqlInfo [sql=" + sql + ", parameter=" + parameter + "]";
 	}
-
 }

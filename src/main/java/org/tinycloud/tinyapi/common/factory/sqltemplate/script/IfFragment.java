@@ -20,9 +20,7 @@ public class IfFragment implements SqlFragment {
 	@Override
 	public boolean apply(Context context) {
 		if (expression.evaluateBoolean(test, context.getBinding())) {
-
 			this.contents.apply(context);
-
 			return true;
 		}
 		return false;
