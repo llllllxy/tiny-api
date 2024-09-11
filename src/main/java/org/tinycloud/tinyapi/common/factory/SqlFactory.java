@@ -1,5 +1,6 @@
 package org.tinycloud.tinyapi.common.factory;
 
+import com.google.common.collect.Lists;
 import org.tinycloud.tinyapi.common.factory.sqlformat.AnalyzeContext;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlMeta;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlTemplate;
@@ -28,17 +29,32 @@ public class SqlFactory {
 
     public static void main(String[] args) {
 
-        String sql = """
-                select datasource_id, db_type, db_driver, db_url, db_user, db_pwd
-                        from sys_datasync_datasource
-                        where datasource_id = #{_parameter} and line_no = #{lineNo} and ddd = #{BUILTIN_USER_ID} and hhh in
-                <foreach item="item" index="index" collection="idList" open = "(" separator = "," close = ")">#{item}</foreach>
-                """;
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("_parameter", "1");
-        paramMap.put("lineNo", 222);
+        String sql = " SELECT\n" +
+                "                dates.dateStr as dateStr,\n" +
+                "                COUNT(t_mock_access_log.access_time) AS accessCount\n" +
+                "                FROM\n" +
+                "                (\n" +
+                "                <foreach collection=\"dayList\" item=\"item\" separator=\" \" index=\"idx\" open=\"\" close=\"\">\n" +
+                "                    <choose>\n" +
+                "                        <when test=\"idx == dayList.size() - 1\">\n" +
+                "                            SELECT #{item} AS dateStr\n" +
+                "                        </when>\n" +
+                "                        <otherwise>\n" +
+                "                            SELECT #{item} AS dateStr UNION ALL\n" +
+                "                        </otherwise>\n" +
+                "                    </choose>\n" +
+                "                </foreach>\n" +
+                "                ) AS dates\n" +
+                "                LEFT JOIN t_mock_access_log ON DATE(t_mock_access_log.access_time) = dates.dateStr AND t_mock_access_log.tenant_id = #{tenantId}\n" +
+                "                GROUP BY dates.dateStr\n" +
+                "                ORDER BY dates.dateStr";
 
-        paramMap.put("idList", List.of(1, 2, 3));
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("mockName", "测试");
+        paramMap.put("tenantId", 22278282828L);
+
+        paramMap.put("dayList", Lists.newArrayList("2024-09-11", "2024-09-12", "2024-09-13", "2024-09-14", "2024-09-14", "2024-09-16", "2024-09-17"));
 
         String result = SqlFactory.generateSql(sql, paramMap);
 

@@ -1,6 +1,5 @@
 package org.tinycloud.tinyapi.common.factory.sqltemplate.exception;
 
-import java.io.Serial;
 
 /**
  * <p>
@@ -11,7 +10,6 @@ import java.io.Serial;
  * @since 2024-09-11 10:42
  */
 public class SqlTemplateException extends RuntimeException {
-    @Serial
     private static final long serialVersionUID = -1L;
 
     public SqlTemplateException(String msg) {

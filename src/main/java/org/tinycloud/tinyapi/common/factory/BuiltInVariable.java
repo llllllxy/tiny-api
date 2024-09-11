@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  定义默认参数
+ *  定义默认内置参数
  * </p>
  *
  * @author liuxingyu01
@@ -20,7 +20,6 @@ public class BuiltInVariable {
     private static final Logger logger = LoggerFactory.getLogger(BuiltInVariable.class);
 
     public static Map<String, String> getBuiltInVariable() {
-
         Map<String, String> variables = new HashMap<>();
         try {
             variables.put("BUILTIN_USER_ID", "admin");
@@ -30,6 +29,8 @@ public class BuiltInVariable {
         }
         variables.put("BUILTIN_NOW_DATE_YYYYMMDD", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         variables.put("BUILTIN_NOW_DATE_YYYYMM", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")));
+        variables.put("BUILTIN_NOW_DATE_YYYY-MM-DD", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        variables.put("BUILTIN_NOW_DATE_YYYY-MM", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
         variables.put("BUILTIN_NOW_DATE_YYYY", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")));
         // variables.put("BUILTIN_SAME_DATE_YYYYMMDD", DateUtils.getSameDate(DateUtils.getToday()));
         // variables.put("BUILTIN_SAME_DATE_YYYYMM", DateUtils.getSameDate(DateUtils.getCurMonth()));
