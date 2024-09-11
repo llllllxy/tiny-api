@@ -8,23 +8,26 @@ import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlTemplateEngin;
 import org.tinycloud.tinyapi.common.factory.sqltemplate.exception.SqlTemplateException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 public class SqlFactory {
 
     public static String generateSql(String sqlStr, Map<String, Object> paramMap) {
+        SqlMeta sqlMeta = generate(sqlStr, paramMap);
+        String result = AnalyzeContext.getContext().analyze(sqlMeta.getSql(), sqlMeta.getParameter());
+        return result;
+    }
+
+
+    public static SqlMeta generate(String sqlStr, Map<String, Object> paramMap) {
         if (sqlStr == null) {
             throw new SqlTemplateException("sqlStr cannot be empty!");
         }
         SqlTemplateEngin sqlTemplateEngin = new SqlTemplateEngin();
         SqlTemplate sqlTemplate = sqlTemplateEngin.getSqlTemplate(sqlStr);
-
         SqlMeta sqlMeta = sqlTemplate.process(paramMap);
-
-        String result = AnalyzeContext.getContext().analyze(sqlMeta.getSql(), sqlMeta.getParameter());
-        return result;
+        return sqlMeta;
     }
 
     public static void main(String[] args) {
