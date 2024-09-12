@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>
+ *  处理if和choose的test内容判断的
+ * </p>
+ *
+ * @author liuxingyu01
+ * @since 2024-09-11 10:42
+ */
 public class ExpressionEvaluator {
 
     public boolean evaluateBoolean(String expression, Object parameterObject) {
@@ -44,7 +52,6 @@ public class ExpressionEvaluator {
         if (value instanceof Map) {
             return ((Map) value).entrySet();
         }
-
         if (value instanceof String) {
             List<Object> answer = new ArrayList<>();
             String[] arr = ((String) value).split(",");

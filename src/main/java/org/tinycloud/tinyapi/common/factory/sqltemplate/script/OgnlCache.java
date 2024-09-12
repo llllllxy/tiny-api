@@ -27,8 +27,7 @@ public class OgnlCache {
 		try {
 			return Ognl.getValue(parseExpression(expression), root);
 		} catch (OgnlException e) {
-			throw new RuntimeException("Error evaluating expression '"
-					+ expression + "'. Cause: " + e, e);
+			throw new RuntimeException("Error evaluating expression '" + expression + "'. Cause: " + e, e);
 		}
 	}
 

@@ -4,6 +4,15 @@ import java.util.List;
 
 import org.tinycloud.tinyapi.common.factory.sqltemplate.Context;
 
+
+/**
+ * <p>
+ *  处理<choose></choose>
+ * </p>
+ *
+ * @author liuxingyu01
+ * @since 2024-09-11 10:42
+ */
 public class ChooseFragment implements SqlFragment {
 
 	private SqlFragment defaultSqlFragment;
