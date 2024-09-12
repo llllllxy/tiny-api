@@ -51,15 +51,10 @@ public class SqlTemplate {
     }
 
     public SqlMeta process(Object data) {
-
         Context context = new Context(cfg, data);
-
         setBuildInVariable(context);
-
         calculate(context);
-
         parseParameter(context);
-
         return new SqlMeta(context.getSql(), context.getParameter());
     }
 
@@ -71,37 +66,24 @@ public class SqlTemplate {
     }
 
     private void parseParameter(final Context context) {
-
         String sql = context.getSql();
-
         GenericTokenParser parser1 = new GenericTokenParser("#{", "}",
                 new TokenHandler() {
                     @Override
                     public String handleToken(String content) {
-
-                        Object value = OgnlCache.getValue(content,
-                                context.getBinding());
-
+                        Object value = OgnlCache.getValue(content, context.getBinding());
                         if (value == null) {
-                            throw new SqlTemplateException("Can not found "
-                                    + content + " value");
+                            throw new SqlTemplateException("Can not found " + content + " value");
                         }
-
                         context.addParameter(value);
-
                         return "?";
                     }
                 });
-
         sql = parser1.parse(sql);
-
-
         context.setSql(sql);
-
     }
 
     private void calculate(Context context) {
-
         this.root.apply(context);
     }
 
@@ -152,11 +134,9 @@ public class SqlTemplate {
             return contents;
         }
 
-        private Document buildXml(String templateContent)
-                throws ParserConfigurationException, SAXException, IOException {
+        private Document buildXml(String templateContent) throws ParserConfigurationException, SAXException, IOException {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(true);
-
             factory.setNamespaceAware(false);
             factory.setIgnoringComments(true);
             factory.setIgnoringElementContentWhitespace(false);
@@ -165,7 +145,6 @@ public class SqlTemplate {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(new EntityResolver() {
-
                 @Override
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                     ResourceLoader resourceLoader = new DefaultResourceLoader();
@@ -195,7 +174,7 @@ public class SqlTemplate {
             return builder.parse(inputSource);
         }
 
-        private Map<String, TagHandler> nodeHandlers = new HashMap<String, TagHandler>() {
+        private final Map<String, TagHandler> nodeHandlers = new HashMap<String, TagHandler>() {
             private static final long serialVersionUID = 7123056019193266281L;
 
             {
@@ -216,44 +195,33 @@ public class SqlTemplate {
 
         private class TrimHandler implements TagHandler {
             @Override
-            public void handleNode(Node nodeToHandle,
-                                   List<SqlFragment> targetContents) {
+            public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
                 MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
 
                 NamedNodeMap attributes = nodeToHandle.getAttributes();
-                Node prefixAtt = attributes
-                        .getNamedItem("prefix");
+                Node prefixAtt = attributes.getNamedItem("prefix");
 
                 String prefix = prefixAtt == null ? null : prefixAtt.getTextContent();
-
-                Node prefixOverridesAtt = attributes
-                        .getNamedItem("prefixOverrides");
+                Node prefixOverridesAtt = attributes.getNamedItem("prefixOverrides");
 
                 String prefixOverrides = prefixOverridesAtt.getTextContent();
-
-                Node suffixAtt = attributes
-                        .getNamedItem("suffix");
+                Node suffixAtt = attributes.getNamedItem("suffix");
 
                 String suffix = suffixAtt == null ? null : suffixAtt.getTextContent();
-
-                Node suffixOverridesAtt = attributes
-                        .getNamedItem("suffixOverrides");
+                Node suffixOverridesAtt = attributes.getNamedItem("suffixOverrides");
 
                 String suffixOverrides = suffixOverridesAtt == null ? null : suffixOverridesAtt.getTextContent();
-                TrimFragment trim = new TrimFragment(mixedSqlFragment, prefix,
-                        suffix, prefixOverrides, suffixOverrides);
+                TrimFragment trim = new TrimFragment(mixedSqlFragment, prefix, suffix, prefixOverrides, suffixOverrides);
                 targetContents.add(trim);
             }
         }
 
         private class WhereHandler implements TagHandler {
             @Override
-            public void handleNode(Node nodeToHandle,
-                                   List<SqlFragment> targetContents) {
+            public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
                 WhereFragment where = new WhereFragment(mixedSqlFragment);
                 targetContents.add(where);
             }
@@ -261,11 +229,9 @@ public class SqlTemplate {
 
         private class SetHandler implements TagHandler {
             @Override
-            public void handleNode(Node nodeToHandle,
-                                   List<SqlFragment> targetContents) {
+            public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
                 SetFragment set = new SetFragment(mixedSqlFragment);
                 targetContents.add(set);
             }
@@ -276,8 +242,7 @@ public class SqlTemplate {
             public void handleNode(Node nodeToHandle,
                                    List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
                 NamedNodeMap attributes = nodeToHandle.getAttributes();
                 Node collectionAtt = attributes.getNamedItem("collection");
 
@@ -307,44 +272,33 @@ public class SqlTemplate {
 
                 String separator = sparatorAtt == null ? null : sparatorAtt.getTextContent();
 
-                ForEachFragment forEachSqlFragment = new ForEachFragment(
-                        mixedSqlFragment, collection, index, item, open, close,
-                        separator);
+                ForEachFragment forEachSqlFragment = new ForEachFragment(mixedSqlFragment, collection, index, item, open, close, separator);
                 targetContents.add(forEachSqlFragment);
             }
         }
 
         private class IfHandler implements TagHandler {
             @Override
-            public void handleNode(Node nodeToHandle,
-                                   List<SqlFragment> targetContents) {
+            public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
-
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
                 NamedNodeMap attributes = nodeToHandle.getAttributes();
-
                 Node testAtt = attributes.getNamedItem("test");
-
                 if (testAtt == null) {
                     throw new SqlTemplateException(nodeToHandle.getNodeName() + " must has test attribute ! ");
                 }
 
                 String test = testAtt.getTextContent();
-
-                IfFragment ifSqlFragment = new IfFragment(mixedSqlFragment,
-                        test);
+                IfFragment ifSqlFragment = new IfFragment(mixedSqlFragment, test);
                 targetContents.add(ifSqlFragment);
             }
         }
 
         private class OtherwiseHandler implements TagHandler {
             @Override
-            public void handleNode(Node nodeToHandle,
-                                   List<SqlFragment> targetContents) {
+            public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> contents = buildDynamicTag(nodeToHandle);
-                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(
-                        contents);
+                MixedSqlFragment mixedSqlFragment = new MixedSqlFragment(contents);
                 targetContents.add(mixedSqlFragment);
             }
         }
@@ -354,17 +308,14 @@ public class SqlTemplate {
             public void handleNode(Node nodeToHandle, List<SqlFragment> targetContents) {
                 List<SqlFragment> whenSqlFragments = new ArrayList<SqlFragment>();
                 List<SqlFragment> otherwiseSqlFragments = new ArrayList<SqlFragment>();
-                handleWhenOtherwiseNodes(nodeToHandle, whenSqlFragments,
-                        otherwiseSqlFragments);
+                handleWhenOtherwiseNodes(nodeToHandle, whenSqlFragments, otherwiseSqlFragments);
                 SqlFragment defaultSqlFragment = getDefaultSqlFragment(otherwiseSqlFragments);
-                ChooseFragment chooseSqlFragment = new ChooseFragment(
-                        whenSqlFragments, defaultSqlFragment);
+                ChooseFragment chooseSqlFragment = new ChooseFragment(whenSqlFragments, defaultSqlFragment);
                 targetContents.add(chooseSqlFragment);
             }
 
             private void handleWhenOtherwiseNodes(Node chooseSqlFragment, List<SqlFragment> ifSqlFragments, List<SqlFragment> defaultSqlFragments) {
                 NodeList children = chooseSqlFragment.getChildNodes();
-
                 for (int i = 0; i < children.getLength(); i++) {
                     Node child = children.item(i);
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -377,22 +328,18 @@ public class SqlTemplate {
                         }
                     }
                 }
-
             }
 
-            private SqlFragment getDefaultSqlFragment(
-                    List<SqlFragment> defaultSqlFragments) {
+            private SqlFragment getDefaultSqlFragment(List<SqlFragment> defaultSqlFragments) {
                 SqlFragment defaultSqlFragment = null;
                 if (defaultSqlFragments.size() == 1) {
                     defaultSqlFragment = defaultSqlFragments.get(0);
                 } else if (defaultSqlFragments.size() > 1) {
-                    throw new SqlTemplateException(
-                            "Too many default (otherwise) elements in choose statement.");
+                    throw new SqlTemplateException("Too many default (otherwise) elements in choose statement.");
                 }
                 return defaultSqlFragment;
             }
         }
-
     }
 
 }
