@@ -11,27 +11,26 @@ import java.util.Map;
 
 /**
  * <p>
- *  数据连接适配器,驱动需要另外引入
+ * 数据连接适配器,驱动需要另外引入
  * </p>
  *
  * @author liuxingyu01
  * @since 2024-09-11 10:42
  */
-public class DatasourceUtil {
-    private final static Logger logger = LoggerFactory.getLogger(DatasourceUtil.class);
+public class DatasourceUtils {
+    private final static Logger logger = LoggerFactory.getLogger(DatasourceUtils.class);
 
     public static String DB_TYPE_MYSQL = "mysql";
     public static String DB_TYPE_GREENPLUM = "greenplum";
     public static String DB_TYPE_DB2 = "db2";
     public static String DB_TYPE_ORACLE = "oracle";
 
-    private JdbcUtil jdbcUtil = null;
+    private JdbcUtils jdbcUtils = null;
 
     private String _dbType = null;
 
 
-    public DatasourceUtil(String dbType, String ip, int port, String dbname, String username, String password) {
-
+    public DatasourceUtils(String dbType, String ip, int port, String dbname, String username, String password) {
         String driver, url;
         if (DB_TYPE_MYSQL.equals(dbType)) {
             driver = "com.mysql.jdbc.Driver";
@@ -49,12 +48,11 @@ public class DatasourceUtil {
             throw new RuntimeException("不支持的数据库类型：" + dbType);
         }
         _dbType = dbType;
-        jdbcUtil = new JdbcUtil(driver, url, username, password);
-
+        jdbcUtils = new JdbcUtils(driver, url, username, password);
     }
 
-    public DatasourceUtil(String dataSourceBeanId) {
-        jdbcUtil = new JdbcUtil(dataSourceBeanId);
+    public DatasourceUtils(String dataSourceBeanId) {
+        jdbcUtils = new JdbcUtils(dataSourceBeanId);
 
     }
 
@@ -70,7 +68,7 @@ public class DatasourceUtil {
             testSql = "SELECT 1 FROM DUAL";
         }
         try {
-            List list = jdbcUtil.selectByParams(testSql, new ArrayList());
+            List list = jdbcUtils.selectByParams(testSql, new ArrayList());
             if (list != null && list.size() > 0) {
                 return true;
             }
@@ -82,33 +80,34 @@ public class DatasourceUtil {
 
     /**
      * 更新数据
+     *
      * @param sql
      * @param params
      * @return
      * @throws SQLException
      */
     public boolean updateByParams(String sql, List params) throws SQLException {
-        return jdbcUtil.updateByParams(sql,params);
+        return jdbcUtils.updateByParams(sql, params);
     }
 
     /**
      * 查询多条记录
+     *
      * @param sql
      * @param params
      * @return
      * @throws SQLException
      */
     public List<Map> selectByParams(String sql, List params) throws SQLException {
-        return jdbcUtil.selectByParams(sql,params);
+        return jdbcUtils.selectByParams(sql, params);
     }
-
 
 
     /**
      * 释放连接
      */
     public void release() {
-        jdbcUtil.release();
+        jdbcUtils.release();
     }
 
 }

@@ -4,6 +4,11 @@ public enum CoreErrorCode {
     API_ADDRESS_IS_NULL_ERROR(1001, "服务地址url不能为空！"),
     API_URL_PATH_IS_NOT_EXIST(1002, "服务地址不存在，请检查！"),
     API_URL_PATH_ARE_DUPLICATES(1003, "服务地址存在重复，请检查！"),
+    API_METHOD_IS_NOT_MATCHED(1004, "HTTP Method不匹配！"),
+    API_METHOD_IS_NOT_SUPPORT(1005, "HTTP Method不不支持！"),
+    THE_PAGINATION_PARAMETER_PAGENO_IS_MISSING(1006, "该服务的分页参数已开启，但是缺少pageNo分页参数！"),
+    THE_PAGINATION_PARAMETER_PAGESIZE_IS_MISSING(1007, "该服务的分页参数已开启，但是缺少pageSize分页参数！"),
+
 
 
     FILE_UPLOAD_FAILED(2001, "文件上传失败，请联系系统管理员！"),

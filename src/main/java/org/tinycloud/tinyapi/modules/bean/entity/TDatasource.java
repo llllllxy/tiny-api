@@ -53,7 +53,7 @@ public class TDatasource implements Serializable {
     private String datasourcePassword;
 
     /**
-     * 数据库类型，10 mysql, 11 postgre
+     * 数据库类型，10 mysql, 11 postgresql
      */
     @TableField(value = "datasource_type")
     private Integer datasourceType;

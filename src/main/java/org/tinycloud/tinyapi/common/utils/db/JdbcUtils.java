@@ -20,8 +20,8 @@ import java.util.Map;
  * @author liuxingyu01
  * @since 2024-09-11 10:42
  */
-public class JdbcUtil {
-    private static final Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
+public class JdbcUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
 
     /**
      * 定义数据库的链接
@@ -47,7 +47,7 @@ public class JdbcUtil {
      * @param username 用户名
      * @param password 密码
      */
-    public JdbcUtil(String driver, String url, String username, String password) {
+    public JdbcUtils(String driver, String url, String username, String password) {
         try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, username, password);
@@ -62,7 +62,7 @@ public class JdbcUtil {
      *
      * @param dataSourceBeanId beanId
      */
-    public JdbcUtil(String dataSourceBeanId) {
+    public JdbcUtils(String dataSourceBeanId) {
         try {
             DataSource dataSource = (DataSource) SpringContextUtils.getBean(dataSourceBeanId);
             conn = dataSource.getConnection();

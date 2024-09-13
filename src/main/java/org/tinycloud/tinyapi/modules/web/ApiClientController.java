@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.tinycloud.tinyapi.common.constant.GlobalConstant;
+import org.tinycloud.tinyapi.common.constant.BusinessConstant;
 import org.tinycloud.tinyapi.common.model.ApiResult;
 import org.tinycloud.tinyapi.modules.service.ApiClientService;
 
@@ -35,7 +35,7 @@ public class ApiClientController {
      * @param request
      * @return
      */
-    @RequestMapping(value = GlobalConstant.URL_PREFIX + "/**", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = BusinessConstant.URL_PREFIX + "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public ApiResult<Object> queryByUrl(HttpServletRequest request) {
         return ApiResult.success(this.apiClientService.queryByUrl(request), "获取成功！");
     }

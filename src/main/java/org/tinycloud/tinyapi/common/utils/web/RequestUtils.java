@@ -20,8 +20,8 @@ import java.util.Objects;
  * @date 2021-01-30-11:20
  * @description request工具类
  **/
-public class RequestUtil {
-    private final static Logger log = LoggerFactory.getLogger(RequestUtil.class);
+public class RequestUtils {
+    private final static Logger log = LoggerFactory.getLogger(RequestUtils.class);
 
     /**
      * 移除request指定参数
@@ -103,7 +103,7 @@ public class RequestUtil {
      */
     public static Map<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
-        Enumeration parameterNames = request.getParameterNames();
+        Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String parameterName = (String) parameterNames.nextElement();
             result.put(parameterName, request.getParameter(parameterName));
