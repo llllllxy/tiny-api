@@ -78,7 +78,7 @@ public class JdbcUtils {
      * @param sql    sql语句
      * @param params 参数
      */
-    public boolean updateByParams(String sql, List<Object> params) throws SQLException {
+    public int updateByParams(String sql, List<Object> params) throws SQLException {
         int result = -1;
         pstmt = conn.prepareStatement(sql);
         int index = 1;
@@ -89,7 +89,7 @@ public class JdbcUtils {
             }
         }
         result = pstmt.executeUpdate();
-        return result >= 0;
+        return result;
     }
 
     /**

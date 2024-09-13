@@ -1,5 +1,15 @@
 package org.tinycloud.tinyapi.common.enums;
 
+
+/**
+ * <p>
+ *     租户错误码枚举
+ *     90**  --  99**
+ * </p>
+ *
+ * @author liuxingyu01
+ * @since 2024-09-13 22:25
+ */
 public enum TenantErrorCode {
     TENANT_NOT_LOGIN(3001, "会话已过期，请重新登录！"),
     TENANT_USERNAME_OR_PASSWORD_MISMATCH(3002, "用户名或密码错误！"),
@@ -13,23 +23,10 @@ public enum TenantErrorCode {
     TENANT_OLD_PASSWORD_IS_WRONG(3008, "旧密码不正确，请检查！"),
 
 
-    TENANT_PROJECT_NAME_OR_PATH_ALREADY_EXIST(3100, "项目名称或项目路径已存在，请修改！"),
-    TENANT_MOCKINFO_IS_ENABLE(3101, "只可启用'停用'状态的接口！"),
-    TENANT_MOCKINFO_IS_DISABLE(3102, "只可停用'启用'状态的接口！"),
-    TENANT_MOCKINFO_NOT_EXIST(3103, "接口不存在！"),
-
-    TENANT_MOCKINFO_NAME_OR_URL_ALREADY_EXIST(3104, "接口名称或路径已存在，请修改！"),
-
-    TENANT_MOCKINFO_BACK_FILE_NOT_BELONG_THIS_PROJECT(3105, "备份文件不属于这个项目，请修改！"),
-    TENANT_MOCKINFO_IMPORT_PROJECT_ERROR(3106, "导入项目失败，请修改！"),
+    CONNECTION_TEST_QUERY_FAILED(3101, "数据库测试连接失败，请检查输入内容！"),
 
 
-    ONLY_PROJECT_CREATE_TENANT_CAN_DELETE_MEMBER(3201, "只有项目创建者才可以删除协助者！"),
-    ONLY_PROJECT_CREATE_TENANT_CAN_ADD_MEMBER(3202, "只有项目创建者才可以添加协助者！"),
-    PROJECT_CREATOR_CAN_NOT_BE_DELETED(3203, "项目创建者无法被删除！"),
 
-    ONLY_PROJECT_CREATE_TENANT_CAN_DELETE_PROJECT(3204, "只有项目创建者才可以删除！"),
-    ONLY_PROJECT_CREATE_TENANT_CAN_EDIT_PROJECT(3205, "只有项目创建者才可以修改！"),
     ;
 
     private Integer code;

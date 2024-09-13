@@ -10,16 +10,17 @@ package org.tinycloud.tinyapi.modules.bean.enums;
  */
 public enum DatasourceDriverEnum {
 
-    MySQL("MySQL", "com.mysql.cj.jdbc.Driver", 10),
-    POSTGRESQL("POSTGRESQL", "org.postgresql.Driver", 11),
-    DB2("DB2", "com.ibm.db2.jcc.DB2Driver", 12),
-    ORACLE("ORACLE", "oracle.jdbc.driver.OracleDriver", 13),
+    MySQL("MySQL", "com.mysql.cj.jdbc.Driver", 10, "select 1"),
+    POSTGRESQL("POSTGRESQL", "org.postgresql.Driver", 11, "select 1"),
+    DB2("DB2", "com.ibm.db2.jcc.DB2Driver", 12, "select 1 from SYSIBM.SYSDUMMY1"),
+    ORACLE("ORACLE", "oracle.jdbc.driver.OracleDriver", 13, "SELECT 1 FROM DUAL"),
 
     ;
 
     private String name;
     private String driver;
     private Integer datasourceType;
+    private String connectionTestQuery;
 
     public String getName() {
         return name;
@@ -45,10 +46,19 @@ public enum DatasourceDriverEnum {
         this.datasourceType = datasourceType;
     }
 
-    private DatasourceDriverEnum(String name, String driver, Integer datasourceType) {
+    public String getConnectionTestQuery() {
+        return connectionTestQuery;
+    }
+
+    public void setConnectionTestQuery(String connectionTestQuery) {
+        this.connectionTestQuery = connectionTestQuery;
+    }
+
+    private DatasourceDriverEnum(String name, String driver, Integer datasourceType, String connectionTestQuery) {
         this.name = name;
         this.driver = driver;
         this.datasourceType = datasourceType;
+        this.connectionTestQuery = connectionTestQuery;
     }
 
     private DatasourceDriverEnum() {

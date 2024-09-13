@@ -2,9 +2,9 @@ package org.tinycloud.tinyapi.common.utils.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tinycloud.tinyapi.modules.bean.enums.DatasourceDriverEnum;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,60 +20,26 @@ import java.util.Map;
 public class DatasourceUtils {
     private final static Logger logger = LoggerFactory.getLogger(DatasourceUtils.class);
 
-    public static String DB_TYPE_MYSQL = "mysql";
-    public static String DB_TYPE_GREENPLUM = "greenplum";
-    public static String DB_TYPE_DB2 = "db2";
-    public static String DB_TYPE_ORACLE = "oracle";
-
     private JdbcUtils jdbcUtils = null;
 
-    private String _dbType = null;
-
-
-    public DatasourceUtils(String dbType, String ip, int port, String dbname, String username, String password) {
-        String driver, url;
-        if (DB_TYPE_MYSQL.equals(dbType)) {
-            driver = "com.mysql.jdbc.Driver";
-            url = "jdbc:mysql://" + ip + ":" + port + "/" + dbname + "?useUnicode=true&characterEncoding=utf-8";
-        } else if (DB_TYPE_GREENPLUM.equals(dbType)) {
-            driver = "org.postgresql.Driver";
-            url = "jdbc:postgresql://" + ip + ":" + port + "/" + dbname;
-        } else if (DB_TYPE_DB2.equals(dbType)) {
-            driver = "com.ibm.db2.jcc.DB2Driver";
-            url = "jdbc:db2://" + ip + ":" + port + "/" + dbname;
-        } else if (DB_TYPE_ORACLE.equals(dbType)) {
-            driver = "oracle.jdbc.driver.OracleDriver";
-            url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + dbname;
-        } else {
-            throw new RuntimeException("不支持的数据库类型：" + dbType);
-        }
-        _dbType = dbType;
+    public DatasourceUtils(String url, String username, String password, DatasourceDriverEnum driverEnum) {
+        String driver = driverEnum.getDriver();
         jdbcUtils = new JdbcUtils(driver, url, username, password);
     }
 
     public DatasourceUtils(String dataSourceBeanId) {
         jdbcUtils = new JdbcUtils(dataSourceBeanId);
-
     }
 
-    public boolean testConnection() {
-        String testSql = "";
-        if (_dbType.equals(DB_TYPE_MYSQL)) {
-            testSql = "select 1";
-        } else if (_dbType.equals(DB_TYPE_GREENPLUM)) {
-            testSql = "select 1";
-        } else if (_dbType.equals(DB_TYPE_DB2)) {
-            testSql = "select 1 from SYSIBM.SYSDUMMY1";
-        } else if (_dbType.equals(DB_TYPE_ORACLE)) {
-            testSql = "SELECT 1 FROM DUAL";
-        }
+    public boolean testConnection(DatasourceDriverEnum driverEnum) {
+        String testSql = driverEnum.getConnectionTestQuery();
         try {
-            List list = jdbcUtils.selectByParams(testSql, new ArrayList());
-            if (list != null && list.size() > 0) {
+            List<Map<String, Object>> list = jdbcUtils.selectByParams(testSql, null);
+            if (list != null && !list.isEmpty()) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("数据源测试失败", e);
+            logger.error("数据源测试失败：", e);
         }
         return false;
     }
@@ -81,27 +47,24 @@ public class DatasourceUtils {
     /**
      * 更新数据
      *
-     * @param sql
-     * @param params
-     * @return
-     * @throws SQLException
+     * @param sql 待操作的sql
+     * @param params 待操作的sql参数
+     * @return 结果
      */
-    public boolean updateByParams(String sql, List params) throws SQLException {
+    public int updateByParams(String sql, List<Object> params) throws SQLException {
         return jdbcUtils.updateByParams(sql, params);
     }
 
     /**
      * 查询多条记录
      *
-     * @param sql
-     * @param params
-     * @return
-     * @throws SQLException
+     * @param sql 待操作的sql
+     * @param params 待操作的sql参数
+     * @return 结果
      */
-    public List<Map> selectByParams(String sql, List params) throws SQLException {
+    public List<Map<String, Object>> selectByParams(String sql, List<Object> params) throws SQLException {
         return jdbcUtils.selectByParams(sql, params);
     }
-
 
     /**
      * 释放连接
@@ -109,5 +72,4 @@ public class DatasourceUtils {
     public void release() {
         jdbcUtils.release();
     }
-
 }
