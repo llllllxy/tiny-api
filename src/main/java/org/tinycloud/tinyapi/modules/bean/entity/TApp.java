@@ -1,4 +1,4 @@
-package org.tinycloud.tinyapi.moudles.bean.entity;
+package org.tinycloud.tinyapi.modules.bean.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package org.tinycloud.tinyapi.moudles.service;
+package org.tinycloud.tinyapi.modules.service;
 
 import org.springframework.stereotype.Service;
 

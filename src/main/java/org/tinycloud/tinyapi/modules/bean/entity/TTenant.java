@@ -1,4 +1,4 @@
-package org.tinycloud.tinyapi.moudles.bean.entity;
+package org.tinycloud.tinyapi.modules.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

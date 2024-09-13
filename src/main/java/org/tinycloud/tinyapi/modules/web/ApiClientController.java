@@ -1,4 +1,4 @@
-package org.tinycloud.tinyapi.moudles.web;
+package org.tinycloud.tinyapi.modules.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
