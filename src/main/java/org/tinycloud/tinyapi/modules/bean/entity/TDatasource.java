@@ -53,12 +53,6 @@ public class TDatasource implements Serializable {
     private String datasourcePassword;
 
     /**
-     * 数据源驱动
-     */
-    @TableField(value = "datasource_driver")
-    private String datasourceDriver;
-
-    /**
      * 数据库类型，10 mysql, 11 postgre
      */
     @TableField(value = "datasource_type")
