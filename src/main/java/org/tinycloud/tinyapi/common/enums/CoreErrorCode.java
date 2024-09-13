@@ -1,13 +1,10 @@
 package org.tinycloud.tinyapi.common.enums;
 
 public enum CoreErrorCode {
-    MOCK_ADDRESS_RESOLUTION_ERROR(1001, "Mock地址解析错误！"),
-    MOCK_PROJECT_PATH_IS_NOT_EXIST(1002, "Mock项目路径不存在！"),
-    MOCK_URL_IS_NOT_EXIST(1003, "Mock地址不存在！"),
-    MOCK_METHOD_IS_NOT_MATCHED(1004, "HTTP Method不匹配！"),
-    MOCKJS_PARSING_ERROR(1005, "Mock.js解析错误！"),
+    API_ADDRESS_IS_NULL_ERROR(1001, "服务地址url不能为空！"),
+    API_URL_PATH_IS_NOT_EXIST(1002, "服务地址不存在，请检查！"),
+    API_URL_PATH_ARE_DUPLICATES(1003, "服务地址存在重复，请检查！"),
 
-    MOCK_URL_IS_DISABLED(1006, "Mock地址已禁用！"),
 
     FILE_UPLOAD_FAILED(2001, "文件上传失败，请联系系统管理员！"),
     FILE_NOT_EXIST(2002, "文件不存在！"),

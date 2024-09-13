@@ -55,4 +55,6 @@ public class GlobalConstant {
      */
     public static final String TENANT_TOKEN_KEY = "token";
 
+
+    public static final String URL_PREFIX = "/rest";
 }
