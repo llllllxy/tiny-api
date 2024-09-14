@@ -51,7 +51,7 @@ public class DatasourceAddDto implements Serializable {
     private String datasourceName;
 
     /**
-     * 密码解密密钥（sm2私钥，用于解密密码）
+     * 密码解密密钥（sm2私钥，hex格式，用于解密密码）
      */
     @Length(max = 255, min = 0, message = "密码解密密钥不能超过255个字符")
     private String secretKey;
