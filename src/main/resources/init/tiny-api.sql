@@ -76,7 +76,7 @@ CREATE TABLE `t_api_info`  (
   `app_id` bigint(20) NOT NULL COMMENT '应用ID',
   `api_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '接口名称',
   `api_type` tinyint(4) NOT NULL COMMENT '接口类型（0--sql,1--mock,2--groovy）',
-  `operate_type` tinyint(4) NOT NULL COMMENT '操作类型（0--列表,1--对象,2--值）',
+  `result_type` tinyint(4) NOT NULL COMMENT '结果类型（0--列表,1--对象,2--值）',
   `method` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '请求方式（GET,HEAD,POST,PUT, PATCH, DELETE,OPTIONS,TRACE）',
   `mock_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'mock数据',
   `sql_script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'sql脚本',

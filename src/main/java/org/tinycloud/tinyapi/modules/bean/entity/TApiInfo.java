@@ -50,10 +50,10 @@ public class TApiInfo implements Serializable {
     private Integer apiType;
 
     /**
-     * 操作类型（0--列表,1--对象,2--值）
+     * 结果类型（0--列表,1--对象,2--值）
      */
-    @TableField(value = "operate_type")
-    private Integer operateType;
+    @TableField(value = "result_type")
+    private Integer resultType;
 
     /**
      * 请求方式（GET,HEAD,POST,PUT, PATCH, DELETE,OPTIONS,TRACE）

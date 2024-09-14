@@ -16,8 +16,10 @@ public enum CoreErrorCode {
     API_URL_PATH_ARE_DUPLICATES(1003, "服务地址存在重复，请检查！"),
     API_METHOD_IS_NOT_MATCHED(1004, "HTTP Method不匹配！"),
     API_METHOD_IS_NOT_SUPPORT(1005, "HTTP Method不不支持！"),
-    THE_PAGINATION_PARAMETER_PAGENO_IS_MISSING(1006, "该服务的分页参数已开启，但是缺少pageNo分页参数！"),
-    THE_PAGINATION_PARAMETER_PAGESIZE_IS_MISSING(1007, "该服务的分页参数已开启，但是缺少pageSize分页参数！"),
+
+    API_TYPE_IS_NOT_SUPPORT(1006, "接口类型不不支持！"),
+    THE_PAGINATION_PARAMETER_PAGENO_IS_MISSING(1007, "该服务的分页参数已开启，但是缺少pageNo分页参数！"),
+    THE_PAGINATION_PARAMETER_PAGESIZE_IS_MISSING(1008, "该服务的分页参数已开启，但是缺少pageSize分页参数！"),
 
 
 

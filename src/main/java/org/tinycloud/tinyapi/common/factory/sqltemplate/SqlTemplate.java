@@ -60,8 +60,8 @@ public class SqlTemplate {
 
     public void setBuildInVariable(Context context) {
         Map<String, String> variables = BuiltInVariable.getBuiltInVariable();
-        for (Object o : variables.keySet()) {
-            context.bind((String) o, variables.get(o));
+        for (String key : variables.keySet()) {
+            context.bind(key, variables.get(key));
         }
     }
 
@@ -73,7 +73,7 @@ public class SqlTemplate {
                     public String handleToken(String content) {
                         Object value = OgnlCache.getValue(content, context.getBinding());
                         if (value == null) {
-                            throw new SqlTemplateException("Can not found " + content + " value");
+                            throw new SqlTemplateException("Can not found " + content + " value!");
                         }
                         context.addParameter(value);
                         return "?";
@@ -130,7 +130,6 @@ public class SqlTemplate {
 
                 }
             }
-
             return contents;
         }
 

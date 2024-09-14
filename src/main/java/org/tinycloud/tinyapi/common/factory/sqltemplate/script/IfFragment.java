@@ -11,7 +11,6 @@ public class IfFragment implements SqlFragment {
 	private ExpressionEvaluator expression ;
 
 	public IfFragment(SqlFragment contents, String test) {
-		
 		this.expression = new ExpressionEvaluator();
 		this.contents = contents;
 		this.test = test;

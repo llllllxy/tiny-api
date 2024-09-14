@@ -4,17 +4,25 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.tinycloud.tinyapi.common.constant.BusinessConstant;
+import org.tinycloud.tinyapi.common.constant.GlobalConstant;
 import org.tinycloud.tinyapi.common.enums.CoreErrorCode;
 import org.tinycloud.tinyapi.common.exception.CoreException;
+import org.tinycloud.tinyapi.common.factory.SqlFactory;
+import org.tinycloud.tinyapi.common.factory.sqltemplate.SqlMeta;
 import org.tinycloud.tinyapi.common.utils.JacksonUtils;
 import org.tinycloud.tinyapi.common.utils.StrUtils;
 import org.tinycloud.tinyapi.common.utils.web.RequestUtils;
 import org.tinycloud.tinyapi.modules.bean.entity.TApiInfo;
+import org.tinycloud.tinyapi.modules.bean.enums.ApiStatusEnum;
+import org.tinycloud.tinyapi.modules.bean.enums.ApiTypeEnum;
 import org.tinycloud.tinyapi.modules.bean.enums.IfPagingEnum;
+import org.tinycloud.tinyapi.modules.bean.enums.ResultTypeEnum;
+import org.tinycloud.tinyapi.modules.helper.DatasourceCacheHelper;
 import org.tinycloud.tinyapi.modules.mapper.ApiInfoMapper;
 import org.tinycloud.tinyapi.modules.mapper.AppMapper;
 
@@ -22,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -52,10 +62,43 @@ public class ApiClientService {
             throw new CoreException(CoreErrorCode.API_METHOD_IS_NOT_MATCHED);
         }
 
-        // TODO: 需要继续补充，逻辑还差很多
+        if (ApiTypeEnum.SQL.getCode().equals(tApiInfo.getApiType())) {
+            Long databaseId = tApiInfo.getDatasourceId();
+            String sqlTemplate = tApiInfo.getSqlScript();
+            Map<String, Object> objectMap = paramMap.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            SqlMeta sqlMeta = SqlFactory.generate(sqlTemplate, objectMap);
+            JdbcTemplate jdbcTemplate = DatasourceCacheHelper.jdbcTemplateMap.get(databaseId);
+            List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMeta.getSql(), sqlMeta.getParameter().toArray());
+            if (!CollectionUtils.isEmpty(list)) {
+                if (ResultTypeEnum.VALUE.getCode().equals(tApiInfo.getResultType())) {
+                    Object obj = list.get(0).get("value");
+                    // 如果取不到别名为value的值的时候，则取HashMap里第一个元素的值
+                    if (Objects.isNull(obj)) {
+                        obj = list.get(0).values().toArray()[0];
+                    }
+                    return obj;
+                } else if (ResultTypeEnum.OBJECT.getCode().equals(tApiInfo.getResultType())) {
+                    Map<String, Object> dataMap = list.get(0);
+                    return dataMap;
+                } else if (ResultTypeEnum.LIST.getCode().equals(tApiInfo.getResultType())) {
+                    return list;
+                } else {
+                    return list;
+                }
+            }
+            return null;
+        } else if (ApiTypeEnum.MOCK.getCode().equals(tApiInfo.getApiType())) {
+            Map<String, Object> result = JacksonUtils.readMap(tApiInfo.getMockData());
+            return result;
+        } else if (ApiTypeEnum.GROOVY.getCode().equals(tApiInfo.getApiType())) {
+            // TODO 暂不持支
 
-
-        return null;
+            return null;
+        } else {
+            throw new CoreException(CoreErrorCode.API_TYPE_IS_NOT_SUPPORT);
+        }
     }
 
 
@@ -70,10 +113,13 @@ public class ApiClientService {
             throw new CoreException(CoreErrorCode.API_ADDRESS_IS_NULL_ERROR);
         }
         url = url.replaceAll(".*" + BusinessConstant.URL_PREFIX, "");
-        // 这里还应该过滤app_id（后续需要在拦截器里鉴权时加上ThreadLocal传递过来）
+        // TODO 这里还应该过滤app_id（后续需要在拦截器里鉴权时加上ThreadLocal传递过来）
         // 同应用下的地址路径不允许重复
         List<TApiInfo> apiInfoList = this.apiInfoMapper.selectList(Wrappers.<TApiInfo>lambdaQuery()
-                .eq(TApiInfo::getUrl, url.trim()));
+                .eq(TApiInfo::getUrl, url.trim())
+                .eq(TApiInfo::getDelFlag, GlobalConstant.NOT_DELETED)
+                .eq(TApiInfo::getStatus, GlobalConstant.ENABLED)
+                .eq(TApiInfo::getApiStatus, ApiStatusEnum.RELEASE.getCode()));
         if (CollectionUtils.isEmpty(apiInfoList)) {
             throw new CoreException(CoreErrorCode.API_URL_PATH_IS_NOT_EXIST);
         } else {
