@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2024-03-08 13:58
  */
 @Configuration
-@MapperScan({"org.tinycloud.tinyapi.modules.**.mapper"})
+@MapperScan({"org.tinycloud.tinyapi.**.mapper"})
 public class MybatisPlusConfig {
     /**
      * 分页拦截器配置

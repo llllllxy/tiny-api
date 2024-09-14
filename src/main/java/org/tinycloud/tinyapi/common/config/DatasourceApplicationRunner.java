@@ -44,7 +44,7 @@ public class DatasourceApplicationRunner implements ApplicationRunner {
     private DatasourceMapper datasourceMapper;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         logger.info("Initialization run start!");
         List<TDatasource> datasourceList = this.datasourceMapper.selectList(Wrappers.<TDatasource>lambdaQuery()
                 .eq(TDatasource::getDelFlag, GlobalConstant.NOT_DELETED)
