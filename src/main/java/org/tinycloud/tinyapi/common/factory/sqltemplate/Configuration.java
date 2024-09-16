@@ -3,12 +3,11 @@ package org.tinycloud.tinyapi.common.factory.sqltemplate;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
@@ -81,8 +80,8 @@ public class Configuration {
         return getTemplate(content);
     }
 
-    public SqlTemplate getTemplate(File tplFile) throws FileNotFoundException, IOException {
-        return this.getTemplate(new FileInputStream(tplFile));
+    public SqlTemplate getTemplate(File tplFile) throws IOException {
+        return this.getTemplate(Files.newInputStream(tplFile.toPath()));
     }
 
     private String readerContent(InputStream in) throws IOException {
@@ -112,5 +111,4 @@ public class Configuration {
     public void setCharset(Charset charset) {
         this.charset = charset;
     }
-
 }
