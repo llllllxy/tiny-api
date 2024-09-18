@@ -10,6 +10,7 @@ tinyapi:
   upload-path: D:/data/tinyapi
   # 会话控制(时间类的单位都是秒)
   tenant-auth-timeout: 1800
+  api-auth-timeout: 1800
   # 项目导出备份加密密钥（sm4）
   project-export-dek: Sq91g702s71/q6yUaAsgTw==
 

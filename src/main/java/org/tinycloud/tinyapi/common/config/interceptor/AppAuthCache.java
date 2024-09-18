@@ -31,4 +31,19 @@ public class AppAuthCache  implements Serializable {
      * 应用名称
      */
     private String appName;
+
+    /**
+     * 用户唯一标识
+     */
+    private String appToken;
+
+    /**
+     * 登录时间
+     */
+    private Long loginTime;
+
+    /**
+     * 登录过期时间
+     */
+    private Long loginExpireTime;
 }

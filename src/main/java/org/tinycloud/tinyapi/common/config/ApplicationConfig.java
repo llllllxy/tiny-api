@@ -38,6 +38,11 @@ public class ApplicationConfig {
     private Integer tenantAuthTimeout = 1800;
 
     /**
+     * restful-api系统会话时长
+     */
+    private Integer apiAuthTimeout = 1800;
+
+    /**
      * 项目导出备份加密密钥（sm4）
      */
     private String projectExportDek;
@@ -89,5 +94,13 @@ public class ApplicationConfig {
 
     public void setProjectExportDek(String projectExportDek) {
         this.projectExportDek = projectExportDek;
+    }
+
+    public Integer getApiAuthTimeout() {
+        return apiAuthTimeout;
+    }
+
+    public void setApiAuthTimeout(Integer apiAuthTimeout) {
+        this.apiAuthTimeout = apiAuthTimeout;
     }
 }

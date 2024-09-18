@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class LoginTenant implements Serializable {
+public class TenantAuthCache implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**

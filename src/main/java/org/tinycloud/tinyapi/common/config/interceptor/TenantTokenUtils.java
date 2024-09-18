@@ -12,8 +12,7 @@ import org.tinycloud.tinyapi.common.utils.web.ServletUtils;
  * @date 2022-09-06 10:27
  * @description 租户会话工具类
  **/
-public class TenantAuthUtil {
-
+public class TenantTokenUtils {
 
     /**
      *

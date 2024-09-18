@@ -4,7 +4,7 @@ package org.tinycloud.tinyapi.common.enums;
 /**
  * <p>
  *     租户错误码枚举
- *     90**  --  99**
+ *     30**  --  99**
  * </p>
  *
  * @author liuxingyu01
@@ -24,6 +24,19 @@ public enum TenantErrorCode {
 
 
     CONNECTION_TEST_QUERY_FAILED(3101, "数据库测试连接失败，请检查输入内容！"),
+
+
+
+    AUTHCODE_NOT_EXIST_OR_EXPIRED(4001, "authCode不存在或已过期，请检查！"),
+    APP_CODE_NOT_EXIST(4002, "APPCODE不存在，请检查！"),
+    APP_CODE_IS_EXPIRED(4003, "ak已过期，请检查！"),
+    APP_IS_DISABLED(4004, "应用已被禁用，请检查！"),
+    SIGNATURE_CHECK_FAILED(4005, "签名验签失败，请检查！"),
+    IP_IS_NOT_IN_WHITELIST(4006, "源IP不在白名单内，禁止访问！"),
+    IP_IS_IN_BLACK_LIST(4007, "源IP在黑名单内，禁止访问！"),
+
+    TOKEN_CAN_NOT_BE_NULL(4098, "app_token不能为空，禁止访问！"),
+    RESTFUL_IS_NOT_LOGIN(4099, "应用会话已过期，请重新登录！"),
 
 
 

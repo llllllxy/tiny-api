@@ -54,4 +54,19 @@ public class GlobalConstant {
      * 租户token key
      */
     public static final String TENANT_TOKEN_KEY = "token";
+
+    /**
+     * 应用token key
+     */
+    public static final String APP_TOKEN_KEY = "app_token";
+
+    /**
+     * 应用 authCode 缓存 redis key
+     */
+    public static final String APP_API_AUTHCODE_REDIS_KEY = "tinyapi:app:authcode:";
+
+    /**
+     * 租户RESTFUL token 缓存 redis key
+     */
+    public static final String APP_API_TOKEN_REDIS_KEY = "tinyurl:app:token:";
 }
