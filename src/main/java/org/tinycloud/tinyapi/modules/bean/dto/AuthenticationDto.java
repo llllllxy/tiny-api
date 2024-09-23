@@ -25,6 +25,6 @@ public class AuthenticationDto implements Serializable {
     @NotEmpty(message = "appCode不能为空")
     private String appCode;
 
-    @NotEmpty(message = "签名不能为空（使用sm3-hmac算法）")
+    // @NotEmpty(message = "签名不能为空（使用sm3-hmac算法）")
     private String signature;
 }

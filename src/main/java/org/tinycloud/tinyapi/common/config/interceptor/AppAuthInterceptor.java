@@ -1,6 +1,9 @@
 package org.tinycloud.tinyapi.common.config.interceptor;
 
-import java.io.Serializable;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
 
 /**
  * <p>
@@ -9,5 +12,9 @@ import java.io.Serializable;
  * @author liuxingyu01
  * @since 2024-09-16 22:03
  */
-public class AppAuthInterceptor{
+@Slf4j
+@Component
+public class AppAuthInterceptor implements HandlerInterceptor {
+
+
 }

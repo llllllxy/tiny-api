@@ -148,7 +148,7 @@ CREATE TABLE `t_app`  (
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `app_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '应用访问码',
   `app_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'api访问key（签名认证时需要对用此对authCode进行签名）',
-  `auth_type` tinyint(4) NOT NULL COMMENT '认证方式（0--不需认证1--简单认证2--签名认证）',
+  `auth_type` tinyint(4) NOT NULL COMMENT '认证方式（0--简单认证1--签名认证）',
   `ip_strategy_type` tinyint(4) NULL DEFAULT NULL COMMENT '控制策略类型：（0--不控制1--白名单2-黑名单）',
   `ip_list` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP地址，多个分号隔开',
   PRIMARY KEY (`id`) USING BTREE,

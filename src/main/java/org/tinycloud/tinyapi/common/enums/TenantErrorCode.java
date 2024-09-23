@@ -31,9 +31,12 @@ public enum TenantErrorCode {
     APP_CODE_NOT_EXIST(4002, "APPCODE不存在，请检查！"),
     APP_CODE_IS_EXPIRED(4003, "ak已过期，请检查！"),
     APP_IS_DISABLED(4004, "应用已被禁用，请检查！"),
-    SIGNATURE_CHECK_FAILED(4005, "签名验签失败，请检查！"),
-    IP_IS_NOT_IN_WHITELIST(4006, "源IP不在白名单内，禁止访问！"),
-    IP_IS_IN_BLACK_LIST(4007, "源IP在黑名单内，禁止访问！"),
+    SIGNATURE_CANNOT_EMPTY(4005, "签名值不能为空（使用sm3-hmac算法）"),
+    SIGNATURE_CHECK_FAILED(4006, "签名验签失败，请检查！"),
+    IP_IS_NOT_IN_WHITELIST(4007, "源IP不在白名单内，禁止访问！"),
+    IP_IS_IN_BLACK_LIST(4008, "源IP在黑名单内，禁止访问！"),
+
+
 
     TOKEN_CAN_NOT_BE_NULL(4098, "app_token不能为空，禁止访问！"),
     RESTFUL_IS_NOT_LOGIN(4099, "应用会话已过期，请重新登录！"),

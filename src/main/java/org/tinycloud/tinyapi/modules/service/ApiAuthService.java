@@ -1,14 +1,18 @@
 package org.tinycloud.tinyapi.modules.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.tinycloud.tinyapi.common.config.ApplicationConfig;
+import org.tinycloud.tinyapi.common.config.interceptor.AppAuthCache;
 import org.tinycloud.tinyapi.common.constant.GlobalConstant;
 import org.tinycloud.tinyapi.common.enums.TenantErrorCode;
 import org.tinycloud.tinyapi.common.exception.TenantException;
+import org.tinycloud.tinyapi.common.utils.BeanConvertUtils;
 import org.tinycloud.tinyapi.common.utils.IpGetUtils;
 
 import org.tinycloud.tinyapi.common.utils.JacksonUtils;
@@ -17,14 +21,19 @@ import org.tinycloud.tinyapi.common.utils.cipher.SM3Utils;
 import org.tinycloud.tinyapi.modules.bean.dto.AuthenticationDto;
 import org.tinycloud.tinyapi.modules.bean.dto.SignatureDto;
 import org.tinycloud.tinyapi.modules.bean.entity.TApp;
+import org.tinycloud.tinyapi.modules.bean.enums.AppAuthType;
+import org.tinycloud.tinyapi.modules.bean.enums.IpStrategyTypeEnum;
 import org.tinycloud.tinyapi.modules.mapper.AppMapper;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
+ *     应用认证接口实现
  * </p>
  *
  * @author liuxingyu01
@@ -54,9 +63,8 @@ public class ApiAuthService {
     }
 
     public String authentication(AuthenticationDto dto, HttpServletRequest request) {
-        String appCode = dto.getAuthCode();
+        String appCode = dto.getAppCode();
         String authCode = dto.getAuthCode();
-        String signature = dto.getSignature();
 
         // 第一步、校验authCode是否存在
         boolean hasKey = this.stringRedisTemplate.hasKey(GlobalConstant.APP_API_AUTHCODE_REDIS_KEY + authCode);
@@ -77,30 +85,49 @@ public class ApiAuthService {
             throw new TenantException(TenantErrorCode.APP_IS_DISABLED);
         }
 
-        // 第四步、签名校验
-        String accessKeySecret = entity.getAppKey();
-        String nowSignature = SM3Utils.hmac(authCode, accessKeySecret);
-        if (!signature.equals(nowSignature)) {
-            throw new TenantException(TenantErrorCode.SIGNATURE_CHECK_FAILED);
-        }
-
-        // 第五步，白名单(或者黑名单)校验  TODO
-
+        // 第四步，白名单(或者黑名单)校验
         Integer ipStrategyType = entity.getIpStrategyType();
-        Integer checkIpFlag = entity.getCheckIpFlag();
-        if (checkIpFlag == 1) {
-
-            if (StrUtils.isNotBlank(ipWhitelist)) {
+        if (IpStrategyTypeEnum.WHITE.getCode().equals(ipStrategyType)) {
+            String ipList = entity.getIpList();
+            if (StrUtils.isNotBlank(ipList)) {
+                List<String> ipWhitelist = Arrays.asList(ipList.split(","));
                 if (!ipWhitelist.contains(IpGetUtils.getIpAddr(request))) {
                     throw new TenantException(TenantErrorCode.IP_IS_NOT_IN_WHITELIST);
                 }
             }
+        } else if (IpStrategyTypeEnum.BLACK.getCode().equals(ipStrategyType)) {
+            String ipList = entity.getIpList();
+            if (StrUtils.isNotBlank(ipList)) {
+                List<String> ipBlacklist = Arrays.asList(ipList.split(","));
+                if (ipBlacklist.contains(IpGetUtils.getIpAddr(request))) {
+                    throw new TenantException(TenantErrorCode.IP_IS_IN_BLACK_LIST);
+                }
+            }
+        }
+
+        // 第五步，根据认证类型，进行认证
+        if (entity.getAuthType().equals(AppAuthType.SIMPLE.getCode())) { // 简单认证
+            // 简单校验
+            // 其实上面步骤里，简单认证已经结束了，所以这里不需要额外校验了
+        } else { // 签名认证
+            String signature = dto.getSignature();
+            if (StrUtils.isEmpty(signature)) {
+                throw new TenantException(TenantErrorCode.SIGNATURE_CANNOT_EMPTY);
+            }
+            String appKey = entity.getAppKey();
+            String nowSignature = SM3Utils.hmac(authCode, appKey);
+            if (!signature.equals(nowSignature)) {
+                throw new TenantException(TenantErrorCode.SIGNATURE_CHECK_FAILED);
+            }
         }
         String token = "tinyapi_" + UUID.randomUUID().toString().replace("-", "");
-        // 缓存redis里60秒，表示有效期
-        entity.setTenantPassword(null);
-        this.stringRedisTemplate.opsForValue().set(GlobalConstant.APP_API_TOKEN_REDIS_KEY + token,
-                JacksonUtils.toJsonString(entity), applicationConfig.getApiAuthTimeout(), TimeUnit.SECONDS);
+        AppAuthCache authCache = BeanConvertUtils.convertTo(entity, AppAuthCache::new);
+        authCache.setAppToken(token);
+        authCache.setLoginTime(System.currentTimeMillis());
+        authCache.setLoginExpireTime(authCache.getLoginTime() + applicationConfig.getApiAuthTimeout() * 1000);
+
+        this.stringRedisTemplate.opsForValue().set(GlobalConstant.APP_API_TOKEN_REDIS_KEY + token, JacksonUtils.toJsonString(authCache),
+                applicationConfig.getApiAuthTimeout(), TimeUnit.SECONDS);
         return token;
     }
 }
