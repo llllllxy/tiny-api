@@ -67,7 +67,7 @@ public class ApiAuthService {
         String authCode = dto.getAuthCode();
 
         // 第一步、校验authCode是否存在
-        boolean hasKey = this.stringRedisTemplate.hasKey(GlobalConstant.APP_API_AUTHCODE_REDIS_KEY + authCode);
+        boolean hasKey = Boolean.TRUE.equals(this.stringRedisTemplate.hasKey(GlobalConstant.APP_API_AUTHCODE_REDIS_KEY + authCode));
         if (!hasKey) {
             throw new TenantException(TenantErrorCode.AUTHCODE_NOT_EXIST_OR_EXPIRED);
         }
