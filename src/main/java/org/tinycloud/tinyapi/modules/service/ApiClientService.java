@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.tinycloud.tinyapi.common.config.interceptor.AppAuthHolder;
 import org.tinycloud.tinyapi.common.constant.BusinessConstant;
 import org.tinycloud.tinyapi.common.constant.GlobalConstant;
 import org.tinycloud.tinyapi.common.enums.CoreErrorCode;
@@ -93,7 +94,7 @@ public class ApiClientService {
             Map<String, Object> result = JacksonUtils.readMap(tApiInfo.getMockData());
             return result;
         } else if (ApiTypeEnum.GROOVY.getCode().equals(tApiInfo.getApiType())) {
-            // TODO 暂不持支
+            // TODO 暂不支持
 
             return null;
         } else {
@@ -113,10 +114,12 @@ public class ApiClientService {
             throw new CoreException(CoreErrorCode.API_ADDRESS_IS_NULL_ERROR);
         }
         url = url.replaceAll(".*" + BusinessConstant.URL_PREFIX, "");
-        // TODO 这里还应该过滤app_id（后续需要在拦截器里鉴权时加上ThreadLocal传递过来）
+
+        Long appId = AppAuthHolder.getAppId();
         // 同应用下的地址路径不允许重复
         List<TApiInfo> apiInfoList = this.apiInfoMapper.selectList(Wrappers.<TApiInfo>lambdaQuery()
                 .eq(TApiInfo::getUrl, url.trim())
+                .eq(TApiInfo::getAppId, appId)
                 .eq(TApiInfo::getDelFlag, GlobalConstant.NOT_DELETED)
                 .eq(TApiInfo::getStatus, GlobalConstant.ENABLED)
                 .eq(TApiInfo::getApiStatus, ApiStatusEnum.RELEASE.getCode()));
