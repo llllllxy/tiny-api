@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TenantAuthInterceptor implements HandlerInterceptor {
 
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
-
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -70,7 +68,7 @@ public class TenantAuthInterceptor implements HandlerInterceptor {
         }
         long expireTime = tenantAuthCache.getLoginExpireTime();
         long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TEN) {
+        if (expireTime - currentTime <= GlobalConstant.MILLIS_MINUTE_TEN) {
             // 刷新会话缓存时长
             tenantAuthCache.setLoginExpireTime(currentTime + applicationConfig.getTenantAuthTimeout() * 1000);
             redisTemplate.opsForValue().set(GlobalConstant.TENANT_TOKEN_REDIS_KEY + token, JacksonUtils.toJsonString(tenantAuthCache), applicationConfig.getTenantAuthTimeout(), TimeUnit.SECONDS);

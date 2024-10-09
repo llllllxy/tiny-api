@@ -69,7 +69,7 @@ public class ApiAuthService {
         // 第一步、校验authCode是否存在
         boolean hasKey = Boolean.TRUE.equals(this.stringRedisTemplate.hasKey(GlobalConstant.APP_API_AUTHCODE_REDIS_KEY + authCode));
         if (!hasKey) {
-            throw new TenantException(TenantErrorCode.AUTHCODE_NOT_EXIST_OR_EXPIRED);
+            throw new TenantException(TenantErrorCode.APP_AUTHCODE_NOT_EXIST_OR_EXPIRED);
         }
 
         // 第二步、校验appCode是否存在
@@ -92,7 +92,7 @@ public class ApiAuthService {
             if (StrUtils.isNotBlank(ipList)) {
                 List<String> ipWhitelist = Arrays.asList(ipList.split(","));
                 if (!ipWhitelist.contains(IpGetUtils.getIpAddr(request))) {
-                    throw new TenantException(TenantErrorCode.IP_IS_NOT_IN_WHITELIST);
+                    throw new TenantException(TenantErrorCode.APP_IP_IS_NOT_IN_WHITELIST);
                 }
             }
         } else if (IpStrategyTypeEnum.BLACK.getCode().equals(ipStrategyType)) {
@@ -100,7 +100,7 @@ public class ApiAuthService {
             if (StrUtils.isNotBlank(ipList)) {
                 List<String> ipBlacklist = Arrays.asList(ipList.split(","));
                 if (ipBlacklist.contains(IpGetUtils.getIpAddr(request))) {
-                    throw new TenantException(TenantErrorCode.IP_IS_IN_BLACK_LIST);
+                    throw new TenantException(TenantErrorCode.APP_IP_IS_IN_BLACK_LIST);
                 }
             }
         }
@@ -112,12 +112,12 @@ public class ApiAuthService {
         } else { // 签名认证
             String signature = dto.getSignature();
             if (StrUtils.isEmpty(signature)) {
-                throw new TenantException(TenantErrorCode.SIGNATURE_CANNOT_EMPTY);
+                throw new TenantException(TenantErrorCode.APP_SIGNATURE_CANNOT_EMPTY);
             }
             String appKey = entity.getAppKey();
             String nowSignature = SM3Utils.hmac(authCode, appKey);
             if (!signature.equals(nowSignature)) {
-                throw new TenantException(TenantErrorCode.SIGNATURE_CHECK_FAILED);
+                throw new TenantException(TenantErrorCode.APP_SIGNATURE_CHECK_FAILED);
             }
         }
         String token = "tinyapi_" + UUID.randomUUID().toString().replace("-", "");

@@ -11,6 +11,11 @@ package org.tinycloud.tinyapi.common.constant;
 public class GlobalConstant {
 
     /**
+     * 10分钟时间常量
+     */
+    public static final Long MILLIS_MINUTE_TEN = 10 * 60 * 1000L;
+
+    /**
      * 已删除标记
      */
     public static final Integer DELETED = 1;
