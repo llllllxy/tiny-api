@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.tinycloud.tinyapi.common.config.interceptor.AccessLimitInterceptor;
+import org.tinycloud.tinyapi.common.config.interceptor.AppAuthInterceptor;
 import org.tinycloud.tinyapi.common.config.interceptor.TenantAuthInterceptor;
 
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private TenantAuthInterceptor tenantAuthInterceptor;
 
+    @Autowired
+    private AppAuthInterceptor appAuthInterceptor;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -42,7 +46,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         tenantExcludePaths.add("/auth/getCode");
         tenantExcludePaths.add("/auth/register");
         tenantExcludePaths.add("/auth/sendEmail");
-        tenantExcludePaths.add("/api/rest/**");
+        tenantExcludePaths.add("/api/**");
 
         // 添加静态资源路径
         tenantExcludePaths.add("/static/**");
