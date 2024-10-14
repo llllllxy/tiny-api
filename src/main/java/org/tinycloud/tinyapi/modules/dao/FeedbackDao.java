@@ -1,7 +1,7 @@
-package org.tinycloud.tinyapi.modules.mapper;
+package org.tinycloud.tinyapi.modules.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import org.tinycloud.jdbc.BaseDao;
 import org.tinycloud.tinyapi.modules.bean.entity.TFeedback;
 
 /**
@@ -12,6 +12,6 @@ import org.tinycloud.tinyapi.modules.bean.entity.TFeedback;
  * @since 2024-03-19 15:30
  */
 @Repository
-public interface FeedbackMapper extends BaseMapper<TFeedback> {
+public class FeedbackDao extends BaseDao<TFeedback, Long> {
 
 }

@@ -1,7 +1,7 @@
-package org.tinycloud.tinyapi.modules.mapper;
+package org.tinycloud.tinyapi.modules.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import org.tinycloud.jdbc.BaseDao;
 import org.tinycloud.tinyapi.modules.bean.entity.TMailConfig;
 
 /**
@@ -12,5 +12,5 @@ import org.tinycloud.tinyapi.modules.bean.entity.TMailConfig;
  * @since 2024-03-2024/3/3 14:14
  */
 @Repository
-public interface MailConfigMapper extends BaseMapper<TMailConfig> {
+public class MailConfigDao extends BaseDao<TMailConfig, Long> {
 }

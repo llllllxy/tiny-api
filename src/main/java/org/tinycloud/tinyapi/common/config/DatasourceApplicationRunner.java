@@ -1,6 +1,5 @@
 package org.tinycloud.tinyapi.common.config;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.tinycloud.jdbc.util.CriteriaBuilder;
 import org.tinycloud.tinyapi.common.constant.GlobalConstant;
 import org.tinycloud.tinyapi.common.enums.TenantErrorCode;
 import org.tinycloud.tinyapi.common.exception.TenantException;
@@ -20,7 +20,7 @@ import org.tinycloud.tinyapi.common.utils.db.DatasourceUtils;
 import org.tinycloud.tinyapi.modules.bean.entity.TDatasource;
 import org.tinycloud.tinyapi.modules.bean.enums.DatasourceDriverEnum;
 import org.tinycloud.tinyapi.modules.helper.DatasourceCacheHelper;
-import org.tinycloud.tinyapi.modules.mapper.DatasourceMapper;
+import org.tinycloud.tinyapi.modules.dao.DatasourceDao;
 
 import java.util.List;
 
@@ -41,12 +41,12 @@ public class DatasourceApplicationRunner implements ApplicationRunner {
     private Environment environment;
 
     @Autowired
-    private DatasourceMapper datasourceMapper;
+    private DatasourceDao datasourceDao;
 
     @Override
     public void run(ApplicationArguments args) {
         logger.info("Initialization run start!");
-        List<TDatasource> datasourceList = this.datasourceMapper.selectList(Wrappers.<TDatasource>lambdaQuery()
+        List<TDatasource> datasourceList = this.datasourceDao.select(CriteriaBuilder.<TDatasource>lambdaQuery()
                 .eq(TDatasource::getDelFlag, GlobalConstant.NOT_DELETED)
                 .eq(TDatasource::getStatus, GlobalConstant.ENABLED));
         for (TDatasource dto : datasourceList) {

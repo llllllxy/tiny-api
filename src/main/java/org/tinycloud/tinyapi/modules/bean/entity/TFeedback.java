@@ -3,12 +3,12 @@ package org.tinycloud.tinyapi.modules.bean.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import org.tinycloud.jdbc.annotation.Column;
+import org.tinycloud.jdbc.annotation.Id;
+import org.tinycloud.jdbc.annotation.IdType;
+import org.tinycloud.jdbc.annotation.Table;
 
 /**
  * 反馈建议表
@@ -17,55 +17,56 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("t_feedback")
+@Table("t_feedback")
 public class TFeedback implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Id(idType = IdType.ASSIGN_ID)
+    @Column(value = "id")
     private Long id;
 
     /**
      * 租户id
      */
-    @TableField("tenant_id")
+    @Column("tenant_id")
     private Long tenantId;
 
     /**
      * 反馈类型，0建议，1问题
      */
-    @TableField("feed_type")
+    @Column("feed_type")
     private Integer feedType;
 
     /**
      * 内容
      */
-    @TableField("content")
+    @Column("content")
     private String content;
 
     /**
      * 邮箱
      */
-    @TableField("email")
+    @Column("email")
     private String email;
 
     /**
      * 删除标志（0--未删除1--已删除）
      */
-    @TableField("del_flag")
+    @Column("del_flag")
     private Integer delFlag;
 
     /**
      * 创建时间
      */
-    @TableField("created_at")
+    @Column("created_at")
     private LocalDateTime createdAt;
 
     /**
      * 更新时间
      */
-    @TableField("updated_at")
+    @Column("updated_at")
     private LocalDateTime updatedAt;
 }

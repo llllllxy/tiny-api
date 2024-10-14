@@ -1,7 +1,7 @@
-package org.tinycloud.tinyapi.modules.mapper;
+package org.tinycloud.tinyapi.modules.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import org.tinycloud.jdbc.BaseDao;
 import org.tinycloud.tinyapi.modules.bean.entity.TApiInfo;
 
 /**
@@ -12,5 +12,5 @@ import org.tinycloud.tinyapi.modules.bean.entity.TApiInfo;
  * @since 2024-09-13 14:43
  */
 @Repository
-public interface ApiInfoMapper extends BaseMapper<TApiInfo> {
+public class ApiInfoDao extends BaseDao<TApiInfo, Long> {
 }

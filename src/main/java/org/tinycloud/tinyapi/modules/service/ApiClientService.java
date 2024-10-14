@@ -1,6 +1,5 @@
 package org.tinycloud.tinyapi.modules.service;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -8,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.tinycloud.jdbc.util.CriteriaBuilder;
 import org.tinycloud.tinyapi.common.config.interceptor.AppAuthHolder;
 import org.tinycloud.tinyapi.common.constant.BusinessConstant;
 import org.tinycloud.tinyapi.common.constant.GlobalConstant;
@@ -24,8 +24,8 @@ import org.tinycloud.tinyapi.modules.bean.enums.ApiTypeEnum;
 import org.tinycloud.tinyapi.modules.bean.enums.IfPagingEnum;
 import org.tinycloud.tinyapi.modules.bean.enums.ResultTypeEnum;
 import org.tinycloud.tinyapi.modules.helper.DatasourceCacheHelper;
-import org.tinycloud.tinyapi.modules.mapper.ApiInfoMapper;
-import org.tinycloud.tinyapi.modules.mapper.AppMapper;
+import org.tinycloud.tinyapi.modules.dao.ApiInfoDao;
+import org.tinycloud.tinyapi.modules.dao.AppDao;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -47,10 +47,10 @@ import java.util.stream.Collectors;
 public class ApiClientService {
 
     @Autowired
-    private ApiInfoMapper apiInfoMapper;
+    private ApiInfoDao apiInfoDao;
 
     @Autowired
-    private AppMapper appMapper;
+    private AppDao appDao;
 
     public Object queryByUrl(HttpServletRequest request) {
         String method = request.getMethod();
@@ -117,9 +117,9 @@ public class ApiClientService {
 
         Long appId = AppAuthHolder.getAppId();
         // 同应用下的地址路径不允许重复
-        List<TApiInfo> apiInfoList = this.apiInfoMapper.selectList(Wrappers.<TApiInfo>lambdaQuery()
+        List<TApiInfo> apiInfoList = this.apiInfoDao.select(CriteriaBuilder.<TApiInfo>lambdaQuery()
                 .eq(TApiInfo::getUrl, url.trim())
-                .eq(TApiInfo::getAppId, appId)
+                //.eq(TApiInfo::getAppId, appId)
                 .eq(TApiInfo::getDelFlag, GlobalConstant.NOT_DELETED)
                 .eq(TApiInfo::getStatus, GlobalConstant.ENABLED)
                 .eq(TApiInfo::getApiStatus, ApiStatusEnum.RELEASE.getCode()));

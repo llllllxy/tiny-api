@@ -1,7 +1,7 @@
-package org.tinycloud.tinyapi.modules.mapper;
+package org.tinycloud.tinyapi.modules.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+import org.tinycloud.jdbc.BaseDao;
 import org.tinycloud.tinyapi.modules.bean.entity.TTenant;
 
 
@@ -13,5 +13,5 @@ import org.tinycloud.tinyapi.modules.bean.entity.TTenant;
  * @since 2023-12-05 15:12
  */
 @Repository
-public interface TenantMapper extends BaseMapper<TTenant> {
+public class TenantDao extends BaseDao<TTenant, Long> {
 }

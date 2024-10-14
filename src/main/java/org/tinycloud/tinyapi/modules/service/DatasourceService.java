@@ -14,10 +14,7 @@ import org.tinycloud.tinyapi.modules.bean.dto.DatasourceAddDto;
 import org.tinycloud.tinyapi.modules.bean.entity.TDatasource;
 import org.tinycloud.tinyapi.modules.bean.enums.DatasourceDriverEnum;
 import org.tinycloud.tinyapi.modules.helper.DatasourceCacheHelper;
-import org.tinycloud.tinyapi.modules.mapper.DatasourceMapper;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import org.tinycloud.tinyapi.modules.dao.DatasourceDao;
 
 /**
  * <p>
@@ -30,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DatasourceService {
 
     @Autowired
-    private DatasourceMapper datasourceMapper;
+    private DatasourceDao datasourceDao;
 
     public Boolean add(DatasourceAddDto dto) {
         // 第一步、校验链接地址的可用性
@@ -70,7 +67,7 @@ public class DatasourceService {
         tDatasource.setStatus(GlobalConstant.ENABLED);
         tDatasource.setDelFlag(GlobalConstant.NOT_DELETED);
         tDatasource.setSecretKey(dto.getSecretKey());
-        this.datasourceMapper.insert(tDatasource);
+        this.datasourceDao.insert(tDatasource);
 
         DatasourceCacheHelper.dataSourceMap.put(tDatasource.getId(), dataSource);
         DatasourceCacheHelper.jdbcTemplateMap.put(tDatasource.getId(), new JdbcTemplate(dataSource));

@@ -169,7 +169,7 @@ public class JacksonUtils {
      * @return Bean
      */
     public static <T> T readValue(@Nullable String jsonString, Class<T> valueType) {
-        if (StringUtils.isEmpty(jsonString)) {
+        if (!StringUtils.hasLength(jsonString)) {
             return null;
         }
         try {
@@ -226,7 +226,7 @@ public class JacksonUtils {
      * @return Bean
      */
     public static <T> T readValue(@Nullable String jsonString, TypeReference<T> typeReference) {
-        if (StringUtils.isEmpty(jsonString)) {
+        if (!StringUtils.hasLength(jsonString)) {
             return null;
         }
         try {
@@ -283,7 +283,7 @@ public class JacksonUtils {
      * @return Bean
      */
     public static <T> T readValue(@Nullable String jsonString, JavaType javaType) {
-        if (StringUtils.isEmpty(jsonString)) {
+        if (!StringUtils.hasLength(jsonString)) {
             return null;
         }
         try {
@@ -405,7 +405,7 @@ public class JacksonUtils {
      * @return 集合
      */
     public static <T> List<T> readList(@Nullable String content, Class<T> elementClass) {
-        if (StringUtils.isEmpty(content)) {
+        if (!StringUtils.hasLength(content)) {
             return Collections.emptyList();
         }
         try {
@@ -534,7 +534,7 @@ public class JacksonUtils {
      * @return 集合
      */
     public static <K, V> Map<K, V> readMap(@Nullable String content, Class<?> keyClass, Class<?> valueClass) {
-        if (StringUtils.isEmpty(content)) {
+        if (!StringUtils.hasLength(content)) {
             return Collections.emptyMap();
         }
         try {

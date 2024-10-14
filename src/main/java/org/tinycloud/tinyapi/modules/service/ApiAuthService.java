@@ -1,12 +1,11 @@
 package org.tinycloud.tinyapi.modules.service;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.tinycloud.jdbc.util.CriteriaBuilder;
 import org.tinycloud.tinyapi.common.config.ApplicationConfig;
 import org.tinycloud.tinyapi.common.config.interceptor.AppAuthCache;
 import org.tinycloud.tinyapi.common.constant.GlobalConstant;
@@ -23,7 +22,7 @@ import org.tinycloud.tinyapi.modules.bean.dto.SignatureDto;
 import org.tinycloud.tinyapi.modules.bean.entity.TApp;
 import org.tinycloud.tinyapi.modules.bean.enums.AppAuthType;
 import org.tinycloud.tinyapi.modules.bean.enums.IpStrategyTypeEnum;
-import org.tinycloud.tinyapi.modules.mapper.AppMapper;
+import org.tinycloud.tinyapi.modules.dao.AppDao;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiAuthService {
 
     @Autowired
-    private AppMapper appMapper;
+    private AppDao appDao;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -73,8 +72,8 @@ public class ApiAuthService {
         }
 
         // 第二步、校验appCode是否存在
-        TApp entity = this.appMapper.selectOne(
-                Wrappers.<TApp>lambdaQuery().eq(TApp::getAppCode, appCode)
+        TApp entity = this.appDao.selectOne(
+                CriteriaBuilder.<TApp>lambdaQuery().eq(TApp::getAppCode, appCode)
                         .eq(TApp::getDelFlag, GlobalConstant.NOT_DELETED));
         if (Objects.isNull(entity)) {
             throw new TenantException(TenantErrorCode.APP_CODE_NOT_EXIST);
