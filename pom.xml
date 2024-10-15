@@ -86,6 +86,12 @@
             <artifactId>jakarta.mail</artifactId>
             <version>1.6.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.9.1</version>
+        </dependency>
     </dependencies>
 
     <build>
