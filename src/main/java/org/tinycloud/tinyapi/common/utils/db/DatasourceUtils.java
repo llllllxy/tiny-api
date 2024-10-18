@@ -24,22 +24,22 @@ public class DatasourceUtils {
 
     public DatasourceUtils(String url, String username, String password, DatasourceDriverEnum driverEnum) {
         String driver = driverEnum.getDriver();
-        jdbcUtils = new JdbcUtils(driver, url, username, password);
+        this.jdbcUtils = new JdbcUtils(driver, url, username, password);
     }
 
     public DatasourceUtils(String dataSourceBeanId) {
-        jdbcUtils = new JdbcUtils(dataSourceBeanId);
+        this.jdbcUtils = new JdbcUtils(dataSourceBeanId);
     }
 
     public boolean testConnection(DatasourceDriverEnum driverEnum) {
         String testSql = driverEnum.getConnectionTestQuery();
         try {
-            List<Map<String, Object>> list = jdbcUtils.selectByParams(testSql, null);
+            List<Map<String, Object>> list = this.jdbcUtils.selectByParams(testSql, null);
             if (list != null && !list.isEmpty()) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("数据源测试失败：", e);
+            logger.error("数据源连接测试失败：", e);
         }
         return false;
     }
@@ -52,7 +52,7 @@ public class DatasourceUtils {
      * @return 结果
      */
     public int updateByParams(String sql, List<Object> params) throws SQLException {
-        return jdbcUtils.updateByParams(sql, params);
+        return this.jdbcUtils.updateByParams(sql, params);
     }
 
     /**
@@ -63,13 +63,13 @@ public class DatasourceUtils {
      * @return 结果
      */
     public List<Map<String, Object>> selectByParams(String sql, List<Object> params) throws SQLException {
-        return jdbcUtils.selectByParams(sql, params);
+        return this.jdbcUtils.selectByParams(sql, params);
     }
 
     /**
      * 释放连接
      */
     public void release() {
-        jdbcUtils.release();
+        this.jdbcUtils.release();
     }
 }
