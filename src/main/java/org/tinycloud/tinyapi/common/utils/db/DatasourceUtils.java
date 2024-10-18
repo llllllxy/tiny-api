@@ -27,6 +27,10 @@ public class DatasourceUtils {
         this.jdbcUtils = new JdbcUtils(driver, url, username, password);
     }
 
+    public DatasourceUtils(String url, String username, String password, String driver) {
+        this.jdbcUtils = new JdbcUtils(driver, url, username, password);
+    }
+
     public DatasourceUtils(String dataSourceBeanId) {
         this.jdbcUtils = new JdbcUtils(dataSourceBeanId);
     }
